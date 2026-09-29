@@ -6,6 +6,7 @@ import devshowcase_api.repository.ProjectRepository;
 import devshowcase_api.model.Project;
 import devshowcase_api.model.Profile;
 import devshowcase_api.dto.ProjectRequestDTO;
+import devshowcase_api.dto.ProjectResponseDTO;
 import devshowcase_api.repository.ProfileRepository;
 import devshowcase_api.repository.TechnologyRepository;
 import java.util.List;
@@ -26,7 +27,7 @@ public ProjectService(
     this.technologyRepository = technologyRepository;
 }
 
-public Project criar(ProjectRequestDTO dto) {
+public ProjectResponseDTO criar(ProjectRequestDTO dto) {
 
     Profile profile = profileRepository.findById(dto.getProfileId())
             .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
@@ -41,10 +42,42 @@ List<Technology> technologies =
 
 project.setTechnologies(technologies);
 
-return projectRepository.save(project);}
+Project salvo = projectRepository.save(project);
 
-public List<Project> listarTodos() {
-    return projectRepository.findAll();
+ProjectResponseDTO response = new ProjectResponseDTO();
+response.setId(salvo.getId());
+response.setTitle(salvo.getTitle());
+response.setDescription(salvo.getDescription());
+response.setRepositoryUrl(salvo.getRepositoryUrl());
+response.setProfileId(salvo.getProfile().getId());
+response.setTechnologyIds(
+    salvo.getTechnologies().stream()
+        .map(Technology::getId)
+        .toList()
+);
+
+return response;
+}
+
+public List<ProjectResponseDTO> listarTodos() {
+    List<Project> projects = projectRepository.findAll();
+
+    return projects.stream()
+        .map(project -> {
+            ProjectResponseDTO response = new ProjectResponseDTO();
+            response.setId(project.getId());
+            response.setTitle(project.getTitle());
+            response.setDescription(project.getDescription());
+            response.setRepositoryUrl(project.getRepositoryUrl());
+            response.setProfileId(project.getProfile().getId());
+            response.setTechnologyIds(
+                    project.getTechnologies().stream()
+                            .map(Technology::getId)
+                            .toList()
+            );
+            return response;
+        })
+        .toList();
 }
 
 }

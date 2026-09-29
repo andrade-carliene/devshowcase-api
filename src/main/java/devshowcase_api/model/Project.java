@@ -23,6 +23,9 @@ public class Project {
     private String description;
 
     private String repositoryUrl;
+    private Integer upvotes = 0;
+
+private Double averageRating = 0.0;
 
 @ManyToOne
 @JoinColumn(name = "profile_id")
@@ -85,6 +88,22 @@ public List<Technology> getTechnologies() {
 
 public void setTechnologies(List<Technology> technologies) {
     this.technologies = technologies;
+}
+
+public Integer getUpvotes() {
+    return upvotes;
+}
+
+public void setUpvotes(Integer upvotes) {
+    this.upvotes = upvotes;
+}
+
+public Double getAverageRating() {
+    return averageRating;
+}
+
+public void setAverageRating(Double averageRating) {
+    this.averageRating = averageRating;
 }
 
 }

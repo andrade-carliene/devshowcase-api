@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 import devshowcase_api.dto.ProjectRequestDTO;
-import devshowcase_api.model.Project;
+import devshowcase_api.dto.ProjectResponseDTO;
+
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
@@ -24,18 +25,19 @@ public class ProjectController {
         this.projectService = projectService;
     }
 @PostMapping
-public ResponseEntity<Project> criar(
+public ResponseEntity<ProjectResponseDTO> criar(
         @Valid @RequestBody ProjectRequestDTO dto) {
 
-    Project project = projectService.criar(dto);
+    ProjectResponseDTO project = projectService.criar(dto);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(project);
 }
 
-@GetMapping
-public ResponseEntity<List<Project>> listarTodos() {
 
-    List<Project> projects = projectService.listarTodos();
+@GetMapping
+public ResponseEntity<List<ProjectResponseDTO>> listarTodos() {
+
+    List<ProjectResponseDTO> projects = projectService.listarTodos();
 
     return ResponseEntity.ok(projects);
 }
