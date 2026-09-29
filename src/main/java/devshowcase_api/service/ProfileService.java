@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import devshowcase_api.repository.ProfileRepository;
 import devshowcase_api.model.Profile;
 import devshowcase_api.dto.ProfileRequestDTO;
+import devshowcase_api.exception.ResourceNotFoundException;
 @Service
 public class ProfileService {
 
@@ -26,7 +27,8 @@ public Profile criar(ProfileRequestDTO dto) {
 
 public Profile buscarPorId(Long id) {
     return profileRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
+            .orElseThrow(() -> new ResourceNotFoundException("Perfil não encontrado"));
+
 }
 
 }
