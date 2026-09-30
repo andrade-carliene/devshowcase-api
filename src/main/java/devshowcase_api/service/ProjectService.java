@@ -59,25 +59,51 @@ response.setTechnologyIds(
 return response;
 }
 
-public List<ProjectResponseDTO> listarTodos() {
+public List<ProjectResponseDTO> listarTodos(Long technologyId, int page, int size) {
+
     List<Project> projects = projectRepository.findAll();
 
-    return projects.stream()
-        .map(project -> {
-            ProjectResponseDTO response = new ProjectResponseDTO();
-            response.setId(project.getId());
-            response.setTitle(project.getTitle());
-            response.setDescription(project.getDescription());
-            response.setRepositoryUrl(project.getRepositoryUrl());
-            response.setProfileId(project.getProfile().getId());
-            response.setTechnologyIds(
-                    project.getTechnologies().stream()
-                            .map(Technology::getId)
-                            .toList()
-            );
-            return response;
-        })
-        .toList();
+    if (technologyId != null) {
+        projects = projects.stream()
+                .filter(project -> project.getTechnologies().stream()
+                        .anyMatch(technology -> technology.getId().equals(technologyId)))
+                .toList();
+    }
+
+    int inicio = page * size;
+    int fim = Math.min(inicio + size, projects.size());
+
+    if (inicio >= projects.size()) {
+        return List.of();
+    }
+
+    return projects.subList(inicio, fim).stream()
+            .map(project -> {
+                ProjectResponseDTO response = new ProjectResponseDTO();
+                response.setId(project.getId());
+                response.setTitle(project.getTitle());
+                response.setDescription(project.getDescription());
+                response.setAverageRating(project.getAverageRating());
+                response.setUpvotes(project.getUpvotes());
+                response.setRepositoryUrl(project.getRepositoryUrl());
+                response.setProfileId(project.getProfile().getId());
+                response.setTechnologyIds(
+                        project.getTechnologies().stream()
+                                .map(Technology::getId)
+                                .toList()
+                );
+                return response;
+            })
+            .toList();
+}
+
+public Project upvote(Long id) {
+    Project project = projectRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
+
+    project.setUpvotes(project.getUpvotes() + 1);
+
+    return projectRepository.save(project);
 }
 
 }

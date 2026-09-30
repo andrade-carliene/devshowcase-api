@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Feedback {
 
@@ -18,6 +19,7 @@ public class Feedback {
     private Integer stars;
     @ManyToOne
 @JoinColumn(name = "project_id")
+@JsonIgnore
 private Project project;
 public Long getId() {
     return id;

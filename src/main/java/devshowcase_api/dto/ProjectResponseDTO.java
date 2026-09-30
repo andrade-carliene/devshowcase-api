@@ -10,6 +10,8 @@ public class ProjectResponseDTO {
     private String repositoryUrl;
     private Long profileId;
     private List<Long> technologyIds;
+    private Double averageRating;
+private Integer upvotes;
 
 public Long getId() {
     return id;
@@ -57,6 +59,22 @@ public List<Long> getTechnologyIds() {
 
 public void setTechnologyIds(List<Long> technologyIds) {
     this.technologyIds = technologyIds;
+}
+
+public Double getAverageRating() {
+    return averageRating;
+}
+
+public void setAverageRating(Double averageRating) {
+    this.averageRating = averageRating;
+}
+
+public Integer getUpvotes() {
+    return upvotes;
+}
+
+public void setUpvotes(Integer upvotes) {
+    this.upvotes = upvotes;
 }
 
 }
